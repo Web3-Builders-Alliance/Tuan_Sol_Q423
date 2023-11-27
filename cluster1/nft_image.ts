@@ -15,7 +15,7 @@ umi.use(signerIdentity(signer));
 
 (async () => {
     try {
-        const content = await readFile("../rugly.png")
+        const content = await readFile("./images/rugly.png")
         const image = createGenericFile(content, "rugly.png")
 
         const [myUri] = await bundlrUploader.upload([image]);
