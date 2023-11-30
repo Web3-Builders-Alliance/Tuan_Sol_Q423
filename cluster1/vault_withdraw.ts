@@ -59,6 +59,7 @@ const vault = PublicKey.findProgramAddressSync([Buffer.from("vault"), vaultAuth.
         keypair
       ]).rpc();
     console.log(`Withdraw success! Check out your TX here:\n\nhttps://explorer.solana.com/tx/${signature}?cluster=devnet`);
+    // https://explorer.solana.com/tx/7vcoKhZw7CxprYMeBNnJdSta9GncDgA4zo8ZRT4cH1YmWpJsEiUu3bqDZrA8qtDkrVuZueosPr5ryQJNSvGVaKd?cluster=devnet
   } catch (e) {
     console.error(`Oops, something went wrong: ${e}`);
   }

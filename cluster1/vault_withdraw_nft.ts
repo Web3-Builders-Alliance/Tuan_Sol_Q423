@@ -35,21 +35,20 @@ const provider = new AnchorProvider(connection, new Wallet(keypair), {
 });
 
 // Create our program
-const program = new Program<WbaVault>(IDL, "<address>" as Address, provider);
+const program = new Program<WbaVault>(IDL, "D51uEDHLbWAxNfodfQDv7qkp8WZtxrhi3uganGbNos7o" as Address, provider);
 
 // Create a random keypair
-const vaultState = new PublicKey("<address>");
-
+const vaultState = new PublicKey("GTomrV84NzZpGGczvgWapykPmW9YDzLaS9kFHwz1MECm");
 // Create the PDA for our enrollment account
 // Seeds are "auth", vaultState
-// const vaultAuth = ???
+const vaultAuth = PublicKey.findProgramAddressSync([Buffer.from("auth"), vaultState.toBuffer()], program.programId)[0];
 
 // Create the vault key
 // Seeds are "vault", vaultAuth
-// const vault = ???
+const vault = PublicKey.findProgramAddressSync([Buffer.from("vault"), vaultAuth.toBuffer()], program.programId)[0];
 
 // Mint address
-const mint = new PublicKey("<address>");
+const mint = new PublicKey("7LgpSipyLP8r298rHvtyyFxbkHzuBxB9ZH6TdQjiRQTN");
 
 // Execute our enrollment transaction
 (async () => {
@@ -72,24 +71,45 @@ const mint = new PublicKey("<address>");
     )[0];
 
     // Get the token account of the fromWallet address, and if it does not exist, create it
-    // const ownerAta = await getOrCreateAssociatedTokenAccount(
-    //     ???
-    // );
+    const ownerAta = await getOrCreateAssociatedTokenAccount(
+      connection,
+      keypair,
+      mint,
+      keypair.publicKey,
+      false,
+      commitment
+    );
 
-    // Get the token account of the fromWallet address, and if it does not exist, create it
-    // const vaultAta = await getOrCreateAssociatedTokenAccount(
-    //     ???
-    // );
+    // // Get the token account of the fromWallet address, and if it does not exist, create it
+    const vaultAta = await getOrCreateAssociatedTokenAccount(
+      connection,
+      keypair,
+      mint,
+      vaultAuth,
+      true
+    );
 
-    // const signature = await program.methods
-    // .withdrawNft()
-    // .accounts({
-    //    ???
-    // })
-    // .signers([
-    //     keypair
-    // ]).rpc();
-    // console.log(`Deposit success! Check out your TX here:\n\nhttps://explorer.solana.com/tx/${signature}?cluster=devnet`);
+    const signature = await program.methods
+      .withdrawNft()
+      .accounts({
+        owner: keypair.publicKey,
+        ownerAta: ownerAta.address,
+        vaultState: vaultState,
+        vaultAuth: vaultAuth,
+        vaultAta: vaultAta.address,
+        tokenMint: mint,
+        nftMetadata: metadataAccount,
+        nftMasterEdition: masterEdition,
+        metadataProgram: metadataProgram,
+        tokenProgram: TOKEN_PROGRAM_ID,
+        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+        systemProgram: SystemProgram.programId
+      })
+      .signers([
+        keypair
+      ]).rpc();
+    console.log(`Withdraw success! Check out your TX here:\n\nhttps://explorer.solana.com/tx/${signature}?cluster=devnet`);
+    // https://explorer.solana.com/tx/5fUdcjrm6iCX2SfDUf3D27VMgqUpRxKU6uJjqAVHwiWA9gXAHjQoE2HundMYfKXPGDZ8JmbmSaHwbLcTxRbC1meB?cluster=devnet
   } catch (e) {
     console.error(`Oops, something went wrong: ${e}`);
   }

@@ -88,6 +88,7 @@ const mint = new PublicKey("9xXa31Mnqxsnhd27uz4UTyrztzHA2f15bqb2dJ3puPhD");
         keypair
     ]).rpc();
     console.log(`Deposit success! Check out your TX here:\n\nhttps://explorer.solana.com/tx/${signature}?cluster=devnet`);
+    // https://explorer.solana.com/tx/2MXXBhzRXoGmB8mdwpzWESRbTyRsqddracJao2Epu2EH76VpfobyunEcRDDDuBrMXE6wRJsvWPf6bsJJSALNxGVK?cluster=devnet
   } catch (e) {
     console.error(`Oops, something went wrong: ${e}`);
   }

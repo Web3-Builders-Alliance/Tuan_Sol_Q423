@@ -87,6 +87,7 @@ const mint = new PublicKey("9xXa31Mnqxsnhd27uz4UTyrztzHA2f15bqb2dJ3puPhD");
         keypair
       ]).rpc();
     console.log(`Withdraw success! Check out your TX here:\n\nhttps://explorer.solana.com/tx/${signature}?cluster=devnet`);
+    // https://explorer.solana.com/tx/4ZBgnuN3wwXJtnJ1etzBnD1niPReCPUi8aJ9Emt1MdfNT2VUZ86ZnTPSKtxHLFamJY8zZameptZKR5jQwFykPbMJ?cluster=devnet
   } catch (e) {
     console.error(`Oops, something went wrong: ${e}`);
   }
